@@ -5,7 +5,7 @@ import re
 
 import requests
 
-import min_renovasjon.const as c
+import const as c
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
