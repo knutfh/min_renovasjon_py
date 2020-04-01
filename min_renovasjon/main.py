@@ -101,6 +101,10 @@ class MinRenovasjon:
                                                'adresser.poststed'
                                 })
         data = response.json()
+        logger.debug(data)
+
+        if not data['adresser']:
+            raise Exception(f"No addresses found for search string '{s}'")
 
         if len(data['adresser']) > 1:
             raise Exception(f"{len(data['adresser'])} addresses found. "
