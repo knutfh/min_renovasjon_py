@@ -37,11 +37,8 @@ class MinRenovasjon:
 
     def _base_request(self, endpoint: str, params: dict = None) -> Dict:
         url = c.KOMTEK_API_BASE_URL
-        url_params = {'server': c.KOMTEK_API_ENDPOINT_URL + f"{endpoint}"}
-        headers = {
-            'RenovasjonAppKey': c.APP_KEY,
-            'Kommunenr': self.municipality_code
-        }
+        url_params = {"server": c.KOMTEK_API_ENDPOINT_URL + f"{endpoint}"}
+        headers = {"RenovasjonAppKey": c.APP_KEY, "Kommunenr": self.municipality_code}
         if params:
             url_params.update(params)
 
@@ -54,13 +51,13 @@ class MinRenovasjon:
         return r.json()
 
     def _get_fractions(self) -> Dict:
-        return self._base_request('fraksjoner/')
+        return self._base_request("fraksjoner/")
 
     def _get_waste_collections(self) -> Dict:
         params = {
-            'gatenavn': self.street,
-            'gatekode': f"{self.municipality_code}{self.street_code}",
-            'husnr': self.number
+            "gatenavn": self.street,
+            "gatekode": f"{self.municipality_code}{self.street_code}",
+            "husnr": self.number,
         }
         endpoint = f"tommekalender/?kommunenr={self.municipality_code}"
         return self._base_request(endpoint, params=params)
@@ -72,21 +69,25 @@ class MinRenovasjon:
         _ = []
 
         for fraction in collections:
-            _id = fraction['FraksjonId']
-            _name = [f['Navn'] for f in self.fractions if f['Id'] == _id][0]
-            _first_date = self.to_datetime(fraction['Tommedatoer'][0])
-            _next_date = self.to_datetime(fraction['Tommedatoer'][1])
+            _id = fraction["FraksjonId"]
+            _name = [f["Navn"] for f in self.fractions if f["Id"] == _id][0]
+            _first_date = self.to_datetime(fraction["Tommedatoer"][0])
+            _next_date = self.to_datetime(fraction["Tommedatoer"][1])
 
-            _.append(FractionCollection(fraction_id=_id,
-                                        fraction_name=_name,
-                                        first_date=_first_date,
-                                        next_date=_next_date))
+            _.append(
+                FractionCollection(
+                    fraction_id=_id,
+                    fraction_name=_name,
+                    first_date=_first_date,
+                    next_date=_next_date,
+                )
+            )
 
         return _
 
     @staticmethod
     def to_datetime(s: str) -> datetime:
-        return datetime.strptime(s, '%Y-%m-%dT%H:%M:%S')
+        return datetime.strptime(s, "%Y-%m-%dT%H:%M:%S")
 
     @staticmethod
     def _address_lookup(s) -> Tuple:
@@ -97,57 +98,65 @@ class MinRenovasjon:
         search_string = re.sub(regex, subst, s, 0, re.MULTILINE)
 
         try:
-            response = requests.get(c.ADDRESS_LOOKUP_URL,
-                                    params={
-                                        'sok': search_string,
-                                        # Only get the relevant address fields
-                                        'filtrer': 'adresser.kommunenummer,'
-                                                   'adresser.adressenavn,'
-                                                   'adresser.adressekode,'
-                                                   'adresser.nummer,'
-                                                   'adresser.kommunenavn,'
-                                                   'adresser.postnummer,'
-                                                   'adresser.poststed'
-                                    })
+            response = requests.get(
+                c.ADDRESS_LOOKUP_URL,
+                params={
+                    "sok": search_string,
+                    # Only get the relevant address fields
+                    "filtrer": "adresser.kommunenummer,"
+                    "adresser.adressenavn,"
+                    "adresser.adressekode,"
+                    "adresser.nummer,"
+                    "adresser.kommunenavn,"
+                    "adresser.postnummer,"
+                    "adresser.poststed",
+                },
+            )
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
 
         data = response.json()
         logger.debug(data)
 
-        if not data['adresser']:
+        if not data["adresser"]:
             raise Exception(f"No addresses found for search string '{s}'")
 
-        if len(data['adresser']) > 1:
-            raise Exception(f"{len(data['adresser'])} addresses found. "
-                            f"Only one address should be returned. "
-                            f"Please narrow your search.")
+        if len(data["adresser"]) > 1:
+            raise Exception(
+                f"{len(data['adresser'])} addresses found. "
+                f"Only one address should be returned. "
+                f"Please narrow your search."
+            )
 
         return (
-            data['adresser'][0]['adressenavn'],
-            data['adresser'][0]['adressekode'],
-            data['adresser'][0]['nummer'],
-            data['adresser'][0]['kommunenavn'],
-            data['adresser'][0]['kommunenummer'],
-            data['adresser'][0]['postnummer'],
-            data['adresser'][0]['poststed']
+            data["adresser"][0]["adressenavn"],
+            data["adresser"][0]["adressekode"],
+            data["adresser"][0]["nummer"],
+            data["adresser"][0]["kommunenavn"],
+            data["adresser"][0]["kommunenummer"],
+            data["adresser"][0]["postnummer"],
+            data["adresser"][0]["poststed"],
         )
 
     @property
     def municipality_is_app_customer(self) -> bool:
         try:
-            response = requests.get(c.APP_CUSTOMERS_URL, params={'Appid': 'MobilOS-NorkartRenovasjon'})
+            response = requests.get(
+                c.APP_CUSTOMERS_URL, params={"Appid": "MobilOS-NorkartRenovasjon"}
+            )
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
 
         customers = response.json()
-        return any(customer['Number'] == self.municipality_code for customer in customers)
+        return any(
+            customer["Number"] == self.municipality_code for customer in customers
+        )
 
 
-    ren = MinRenovasjon('Gamle Breviksvei 91, Porsgrunn')
 def main() -> None:
+    ren = MinRenovasjon("Norumveien 23 Sørum ")
     print(ren.municipality_is_app_customer)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
