@@ -17,9 +17,7 @@ FractionCollection = namedtuple(
 
 
 class MinRenovasjon:
-
-    def __init__(self, address_search_string: str, **kwargs):
-        self.kwargs = kwargs
+    def __init__(self, address_search_string: str):
         self.app_key = c.APP_KEY
 
         (
