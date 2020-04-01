@@ -7,7 +7,7 @@ import requests
 
 import min_renovasjon.const as c
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 FractionCollection = namedtuple('WasteCollection', 'fraction_id, fraction_name, first_date, next_date')
@@ -30,7 +30,7 @@ class MinRenovasjon:
         if self.municipality_is_app_customer:
             self.fractions = self._get_fractions()
         else:
-            logger.warning(f"{self.municipality} is not a customer of Min Renovasjon!")
+            logger.info(f"{self.municipality} is not a customer of Min Renovasjon!")
 
     def _base_request(self, endpoint: str, params: dict = None):
         url = c.KOMTEK_API_BASE_URL
