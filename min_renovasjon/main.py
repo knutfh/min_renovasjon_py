@@ -1,5 +1,6 @@
 from collections import namedtuple
 from datetime import datetime
+from typing import Dict, List, Tuple
 import logging
 import re
 
@@ -32,7 +33,7 @@ class MinRenovasjon:
         else:
             logger.info(f"{self.municipality} is not a customer of Min Renovasjon!")
 
-    def _base_request(self, endpoint: str, params: dict = None):
+    def _base_request(self, endpoint: str, params: dict = None) -> Dict:
         url = c.KOMTEK_API_BASE_URL
         url_params = {'server': c.KOMTEK_API_ENDPOINT_URL + f"{endpoint}"}
         headers = {
@@ -44,10 +45,10 @@ class MinRenovasjon:
         r = requests.get(url, headers=headers, params=url_params)
         return r.json()
 
-    def _get_fractions(self):
+    def _get_fractions(self) -> Dict:
         return self._base_request('fraksjoner/')
 
-    def _get_waste_collections(self):
+    def _get_waste_collections(self) -> Dict:
         params = {
             'gatenavn': self.street,
             'gatekode': f"{self.municipality_code}{self.street_code}",
@@ -57,7 +58,7 @@ class MinRenovasjon:
         return self._base_request(endpoint, params=params)
 
     @property
-    def waste_collections(self):
+    def waste_collections(self) -> List:
         collections = self._get_waste_collections()
 
         _ = []
@@ -76,11 +77,11 @@ class MinRenovasjon:
         return _
 
     @staticmethod
-    def to_datetime(s: str) -> object:
+    def to_datetime(s: str) -> datetime:
         return datetime.strptime(s, '%Y-%m-%dT%H:%M:%S')
 
     @staticmethod
-    def _address_lookup(s):
+    def _address_lookup(s) -> Tuple:
 
         regex = r"(.*ve)(i|g)(.*)"
         subst = "\\1*\\3"
@@ -117,14 +118,14 @@ class MinRenovasjon:
         )
 
     @property
-    def municipality_is_app_customer(self):
+    def municipality_is_app_customer(self) -> bool:
         response = requests.get(c.APP_CUSTOMERS_URL, params={'Appid': 'MobilOS-NorkartRenovasjon'})
         customers = response.json()
         return any(customer['Number'] == self.municipality_code for customer in customers)
 
 
-def main():
     ren = MinRenovasjon('Gamle Breviksvei 91, Porsgrunn')
+def main() -> None:
     print(ren.municipality_is_app_customer)
 
 
