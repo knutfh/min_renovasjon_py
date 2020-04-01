@@ -42,7 +42,13 @@ class MinRenovasjon:
         }
         if params:
             url_params.update(params)
-        r = requests.get(url, headers=headers, params=url_params)
+
+        try:
+            r = requests.get(url, headers=headers, params=url_params, timeout=3)
+            r.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+
         return r.json()
 
     def _get_fractions(self) -> Dict:
@@ -88,18 +94,22 @@ class MinRenovasjon:
 
         search_string = re.sub(regex, subst, s, 0, re.MULTILINE)
 
-        response = requests.get(c.ADDRESS_LOOKUP_URL,
-                                params={
-                                    'sok': search_string,
-                                    # Only get the relevant address fields
-                                    'filtrer': 'adresser.kommunenummer,'
-                                               'adresser.adressenavn,'
-                                               'adresser.adressekode,'
-                                               'adresser.nummer,'
-                                               'adresser.kommunenavn,'
-                                               'adresser.postnummer,'
-                                               'adresser.poststed'
-                                })
+        try:
+            response = requests.get(c.ADDRESS_LOOKUP_URL,
+                                    params={
+                                        'sok': search_string,
+                                        # Only get the relevant address fields
+                                        'filtrer': 'adresser.kommunenummer,'
+                                                   'adresser.adressenavn,'
+                                                   'adresser.adressekode,'
+                                                   'adresser.nummer,'
+                                                   'adresser.kommunenavn,'
+                                                   'adresser.postnummer,'
+                                                   'adresser.poststed'
+                                    })
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+
         data = response.json()
         logger.debug(data)
 
@@ -123,7 +133,11 @@ class MinRenovasjon:
 
     @property
     def municipality_is_app_customer(self) -> bool:
-        response = requests.get(c.APP_CUSTOMERS_URL, params={'Appid': 'MobilOS-NorkartRenovasjon'})
+        try:
+            response = requests.get(c.APP_CUSTOMERS_URL, params={'Appid': 'MobilOS-NorkartRenovasjon'})
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+
         customers = response.json()
         return any(customer['Number'] == self.municipality_code for customer in customers)
 
