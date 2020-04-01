@@ -11,7 +11,9 @@ import const as c
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-FractionCollection = namedtuple('WasteCollection', 'fraction_id, fraction_name, first_date, next_date')
+FractionCollection = namedtuple(
+    "WasteCollection", "fraction_id, fraction_name, first_date, next_date"
+)
 
 
 class MinRenovasjon:
@@ -20,13 +22,15 @@ class MinRenovasjon:
         self.kwargs = kwargs
         self.app_key = c.APP_KEY
 
-        (self.street,
-         self.street_code,
-         self.number,
-         self.municipality,
-         self.municipality_code,
-         self.postal_code,
-         self.postal) = self._address_lookup(address_search_string)
+        (
+            self.street,
+            self.street_code,
+            self.number,
+            self.municipality,
+            self.municipality_code,
+            self.postal_code,
+            self.postal,
+        ) = self._address_lookup(address_search_string)
 
         if self.municipality_is_app_customer:
             self.fractions = self._get_fractions()
