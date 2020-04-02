@@ -90,8 +90,7 @@ class MinRenovasjon:
         return datetime.strptime(s, "%Y-%m-%dT%H:%M:%S")
 
     @staticmethod
-    def _address_lookup(s) -> Tuple:
-
+    def _address_lookup(s: str) -> Tuple:
         regex = r"(.*ve)(i|g)(.*)"
         subst = "\\1*\\3"
 
