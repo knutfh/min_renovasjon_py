@@ -11,8 +11,8 @@ import const as c
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-FractionCollection = namedtuple(
-    "WasteCollection", "fraction_id, fraction_name, first_date, next_date"
+FractionCollections = namedtuple(
+    "FractionCollections", "fraction_id, fraction_name, first_date, next_date"
 )
 
 
@@ -75,7 +75,7 @@ class MinRenovasjon:
             _next_date = self.to_datetime(fraction["Tommedatoer"][1])
 
             _.append(
-                FractionCollection(
+                FractionCollections(
                     fraction_id=_id,
                     fraction_name=_name,
                     first_date=_first_date,
@@ -155,7 +155,7 @@ class MinRenovasjon:
 
 def main() -> None:
     ren = MinRenovasjon("Norumveien 23 Sørum ")
-    print(ren.municipality_is_app_customer)
+    print(ren.waste_collections)
 
 
 if __name__ == "__main__":
