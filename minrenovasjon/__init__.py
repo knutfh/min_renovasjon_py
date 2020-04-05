@@ -1,0 +1,1 @@
+from minrenovasjon.minrenovasjon import MinRenovasjon
