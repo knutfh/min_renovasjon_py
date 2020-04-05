@@ -86,8 +86,7 @@ class MinRenovasjon:
         return _
 
     @staticmethod
-    def to_datetime(s: str) -> datetime:
-        return datetime.strptime(s, "%Y-%m-%dT%H:%M:%S")
+    def to_datetime(s: str, fmt: str = None) -> datetime:
 
     @staticmethod
     def _address_lookup(s: str) -> Tuple:
