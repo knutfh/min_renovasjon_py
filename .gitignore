@@ -2,3 +2,5 @@ venv*
 .idea/*
 __pycache__
 .mypy_cache
+/minrenovasjon/.coverage
+/minrenovasjon/htmlcov/
