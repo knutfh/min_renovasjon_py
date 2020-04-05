@@ -36,6 +36,14 @@ class MinRenovasjon:
             logger.info(f"{self.municipality} is not a customer of Min Renovasjon!")
 
     def _base_request(self, endpoint: str, params: dict = None) -> Dict:
+        """
+        Sets up the basic framework to make a call to the Komtek API.
+        All API calls must go through a proxy server, hence both the base URL and separate endpoint url.
+
+        :param endpoint: Desired endpoint to hit. Must include a trailing / if endpoint requires it.
+        :param params: HTTP parameters to include in the request.
+        :return: A dict with JSON results from the API.
+        """
         url = c.KOMTEK_API_BASE_URL
         url_params = {"server": c.KOMTEK_API_ENDPOINT_URL + f"{endpoint}"}
         headers = {"RenovasjonAppKey": c.APP_KEY, "Kommunenr": self.municipality_code}
@@ -51,9 +59,23 @@ class MinRenovasjon:
         return r.json()
 
     def _get_fractions(self) -> Dict:
+        """
+        Get all fractions associated with the initialised address.
+        Returned list dict of fractions includes all fractions available in this municipality.
+        Not all these fractions are necessarily collected during waste collection.
+
+        :return: Dict of all available fractions.
+        """
         return self._base_request("fraksjoner/")
 
     def _get_waste_collections(self) -> Dict:
+        """
+        Gets waste collections from the Komtek API.
+        The waste collections are grouped by fraction, and
+        contains the two next collection dates.
+
+        :return: Dict as returned from the API
+        """
         params = {
             "gatenavn": self.street,
             "gatekode": f"{self.municipality_code}{self.street_code}",
@@ -64,6 +86,12 @@ class MinRenovasjon:
 
     @property
     def waste_collections(self) -> List:
+        """
+        Takes the waste collections returned by the Komtek API and maps the results
+        to a list of FractionCollection named tuples.
+
+        :return: List of FractionCollection named tuples
+        """
         collections = self._get_waste_collections()
 
         _ = []
@@ -87,9 +115,27 @@ class MinRenovasjon:
 
     @staticmethod
     def to_datetime(s: str, fmt: str = None) -> datetime:
+        """
+        Convert a string representing datetime to a datetime object either using
+        the supplied format, or the normal datetime format provided by the Komtek API.
+
+        :param s: String representing a datetime.
+        :param fmt: Format of input string. Optional. Default value used if not set.
+        :return: Datetime object
+        """
+        return datetime.strptime(s, fmt if fmt else "%Y-%m-%dT%H:%M:%S")
 
     @staticmethod
     def _address_lookup(s: str) -> Tuple:
+        """
+        Makes an API call to geonorge.no, the official resource for open geo data in Norway.
+        This function is used to get deterministic address properties that is needed for
+        further API calls with regards to Min Renovasjon, mainly municipality, municipality code,
+        street name and street code.
+
+        :param s: Search string for which address to search
+        :return: Tuple of address fields
+        """
         regex = r"(.*ve)(i|g)(.*)"
         subst = "\\1*\\3"
 
@@ -138,6 +184,13 @@ class MinRenovasjon:
 
     @property
     def municipality_is_app_customer(self) -> bool:
+        """
+        Make an API call to get all customers of the NorkartRenovasjon service which
+        supports the Min Renovasjon app. Then check if this municipality is actually
+        a customer or not.
+
+        :return: Boolean indicating if this municipality is a customer or not.
+        """
         try:
             response = requests.get(
                 c.APP_CUSTOMERS_URL, params={"Appid": "MobilOS-NorkartRenovasjon"}
