@@ -6,7 +6,7 @@ import re
 
 import requests
 
-import minrenovasjon.constants as c
+import const as c
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ class MinRenovasjon:
         if self.municipality_is_app_customer:
             self.fractions = self._get_fractions()
         else:
-            logger.info(f"{self.municipality} is not a customer of Min Renovasjon!")
+            raise Exception(f"{self.municipality} is not a customer of Min Renovasjon!")
 
     def _base_request(self, endpoint: str, params: dict = None) -> Dict:
         """
@@ -93,7 +93,6 @@ class MinRenovasjon:
         :return: List of FractionCollection named tuples
         """
         collections = self._get_waste_collections()
-
         _ = []
 
         for fraction in collections:
@@ -163,7 +162,7 @@ class MinRenovasjon:
         logger.debug(data)
 
         if not data["adresser"]:
-            raise Exception(f"No addresses found for search string '{s}'")
+            raise Exception(f"No address found for search string '{s}'")
 
         if len(data["adresser"]) > 1:
             raise Exception(
@@ -203,11 +202,3 @@ class MinRenovasjon:
             customer["Number"] == self.municipality_code for customer in customers
         )
 
-
-def main() -> None:
-    ren = MinRenovasjon("Norumveien 23 Sørum ")
-    print(ren.waste_collections)
-
-
-if __name__ == "__main__":
-    main()
