@@ -20,22 +20,13 @@ def valid_address(requests_mock):
                 "kommunenummer": "3030",
                 "nummer": 20,
                 "postnummer": "2000",
-                "poststed": "LILLESTR\u00d8M"
+                "poststed": "LILLESTR\u00d8M",
             }
         ]
     }
     requests_mock.get(c.ADDRESS_LOOKUP_URL, json=response)
 
     return MinRenovasjon._address_lookup(search_string), response
-
-
-"""def test_valid_address():
-    valid_address = MinRenovasjon('Jonas Lies gate 20, 2000 Lillestrøm')
-
-    assert valid_address.street is not None
-    assert valid_address.number is not None
-    assert valid_address.municipality is not None
-    assert valid_address.municipality_code is not None"""
 
 
 def test_municipality_is_app_customer():
@@ -103,7 +94,7 @@ def test_municipality_not_customer(requests_mock):
                 "kommunenummer": "1804",
                 "nummer": 92,
                 "postnummer": "8006",
-                "poststed": "BOD\u00d8"
+                "poststed": "BOD\u00d8",
             }
         ]
     }
@@ -134,7 +125,7 @@ def setup_minrenovasjon(requests_mock):
                 "kommunenummer": "3030",
                 "nummer": 20,
                 "postnummer": "2000",
-                "poststed": "LILLESTR\u00d8M"
+                "poststed": "LILLESTR\u00d8M",
             }
         ]
     }
@@ -145,26 +136,22 @@ def setup_minrenovasjon(requests_mock):
     requests_mock.get(c.APP_CUSTOMERS_URL, json=customer_response)
 
     # Mock fractions
-    fractions = [{'Id': 1, 'Navn': 'Mat, plast og rest', 'Ikon': ''},
-                 {'Id': 2, 'Navn': 'Papir', 'Ikon': ''}]
+    fractions = [
+        {"Id": 1, "Navn": "Mat, plast og rest", "Ikon": ""},
+        {"Id": 2, "Navn": "Papir", "Ikon": ""},
+    ]
     requests_mock.get(c.KOMTEK_API_BASE_URL, json=fractions)
 
     # Mock waste collections
     collections_response = [
         {
             "FraksjonId": 1,
-            "Tommedatoer": [
-                "2020-04-17T00:00:00",
-                "2020-04-24T00:00:00"
-            ]
+            "Tommedatoer": ["2020-04-17T00:00:00", "2020-04-24T00:00:00"],
         },
         {
             "FraksjonId": 2,
-            "Tommedatoer": [
-                "2020-04-20T00:00:00",
-                "2020-05-18T00:00:00"
-            ]
-        }
+            "Tommedatoer": ["2020-04-20T00:00:00", "2020-05-18T00:00:00"],
+        },
     ]
 
     requests_mock.get(re.compile(r"tommekalender"), json=collections_response)

@@ -201,4 +201,3 @@ class MinRenovasjon:
         return any(
             customer["Number"] == self.municipality_code for customer in customers
         )
-
