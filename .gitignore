@@ -5,3 +5,7 @@ __pycache__
 /minrenovasjon/.coverage
 /minrenovasjon/htmlcov/
 /MinRenovasjon.paw
+build
+min_renovasjon.egg-info
+dist
+
