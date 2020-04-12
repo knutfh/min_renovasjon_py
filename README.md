@@ -1,3 +1,10 @@
+<p align="center">
+    <a href="https://img.shields.io/pypi/v/min-renovasjon" alt="Version">
+        <img src="https://img.shields.io/pypi/v/min-renovasjon" /></a>
+    <a href="https://img.shields.io/pypi/l/min-renovasjon" alt="License">
+        <img src="https://img.shields.io/pypi/l/min-renovasjon" /></a>
+</p>
+
 ### IN DEVELOPMENT
 
 # Min Renovasjon Python API
@@ -25,3 +32,4 @@ ren.waste_collections()
 ###
 
 [https://www.norkart.no/product/min-renovasjon/]: https://www.norkart.no/product/min-renovasjon/
+[License]: image:: https://img.shields.io/pypi/l/min-renovasjon
