@@ -10,6 +10,9 @@
 # Min Renovasjon Python API
 Python 3 API for [Min Renovasjon][https://www.norkart.no/product/min-renovasjon/].
 
+# Installation
+`pip install min-renovasjon`
+
 # Example
 ```python
 from min_renovasjon import MinRenovasjon
