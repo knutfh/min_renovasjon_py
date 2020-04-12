@@ -5,7 +5,7 @@ Python 3 API for [Min Renovasjon][https://www.norkart.no/product/min-renovasjon/
 
 # Example
 ```python
-from minrenovasjon import MinRenovasjon
+from min_renovasjon import MinRenovasjon
 
 search_string = "Jonas Lies gate 22, 200 Lillestrøm"
 ren = MinRenovasjon(search_string)

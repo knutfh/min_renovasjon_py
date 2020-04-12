@@ -4,8 +4,8 @@ import re
 import pytest
 import requests
 
-import minrenovasjon.const as c
-from minrenovasjon.minrenovasjon import MinRenovasjon
+import min_renovasjon.const as c
+from min_renovasjon.minrenovasjon import MinRenovasjon
 
 
 @pytest.fixture
