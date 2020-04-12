@@ -32,4 +32,3 @@ ren.waste_collections()
 ###
 
 [https://www.norkart.no/product/min-renovasjon/]: https://www.norkart.no/product/min-renovasjon/
-[License]: image:: https://img.shields.io/pypi/l/min-renovasjon
