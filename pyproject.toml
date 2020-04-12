@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "min-renovasjon"
+version = "0.1.2"
+description = "A Python3 API for Min Renovasjon"
+
+authors = ["Knut Flage Henriksen <post@flaksen.com>"]
+
+license = "Apache-2.0"
+
+readme = 'README.md'
+
+repository = 'https://github.com/knutfh/min_renovasjon_py'
+homepage = 'https://github.com/knutfh/min_renovasjon_py'
+
+classifiers= [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License"
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.7"
+requests = "^2.23.0"
+
+[tool.poetry.dev-dependencies]
+requests-mock = "^1.7.0"
+pytest = "^5.4.1"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
