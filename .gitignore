@@ -2,8 +2,8 @@ venv*
 .idea/*
 __pycache__
 .mypy_cache
-/minrenovasjon/.coverage
-/minrenovasjon/htmlcov/
+/min_renovasjon/.coverage
+/min_renovasjon/htmlcov/
 /MinRenovasjon.paw
 build
 min_renovasjon.egg-info
