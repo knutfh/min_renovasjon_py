@@ -1,10 +1,9 @@
 import datetime
 import re
 
+import min_renovasjon.const as c
 import pytest
 import requests
-
-import min_renovasjon.const as c
 from min_renovasjon.minrenovasjon import MinRenovasjon
 
 
